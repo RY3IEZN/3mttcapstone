@@ -94,9 +94,33 @@ After its has been deployed, take note of the function URL, the url will be to i
 
 ![alt](/images/gcpfnc4.png)
 
+Alternatively, if you have the GCP SDK installed locally, you can deploy the Cloud Function directly from your local machine. Navigate to the directory where your `main.py` and `requirements.txt` files are located, then run the following command:
+
+````bash
+gcloud functions deploy FUNCTION_NAME \
+    --runtime python310 \
+    --trigger-http \
+    --allow-unauthenticated \
+    --entry-point save_user_input
+
+
 Now we have both the function and db ready we can just run the frontend locally using liveserver
 
 # Step 3: Test the Application
+
+Before proceeding to test, ensure you update the endpoint URL in the `script.js` file with the new URL provided by the deployed Cloud Function.
+
+For example, replace the existing URL in your `fetch` call with the Cloud Function's trigger URL:
+
+```javascript
+const response = await fetch("https://REGION-PROJECT_ID.cloudfunctions.net/FUNCTION_NAME", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name, email }),
+});
+
 
 we will be using liveserver to run our application locally,o pen the HTML file in a browser. Fill out the form and submit it.
 
@@ -109,3 +133,4 @@ Check the Firestore database to see if the data is saved correctly
 we’ve successfully built and deployed a serverless form-processing application using GCP’s Cloud Run Functions and Firestore. This architecture is highly scalable, cost-effective, and simplifies backend management. With a few tweaks, you can extend this setup to handle more complex workflows or integrate additional services like email notifications or analytics.
 
 Enjoy!!!
+````
